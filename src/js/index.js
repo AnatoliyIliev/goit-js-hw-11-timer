@@ -1,30 +1,28 @@
-const refs = {  
-  days: document.querySelector('[data-value="days"]'),
-  hours: document.querySelector('[data-value="hours"]'),
-  mins: document.querySelector('[data-value="mins"]'),
-  secs: document.querySelector('[data-value="secs"]'),
-}
-
 class CountdownTimer{
-  constructor({targetDate, clockFace}){
-    // this.intervalId = null;
+  constructor({targetDate, selector}){  
     this.targetDate = targetDate,
-    this.clockFace = clockFace
+    this.selector = selector,      
+    this.start(),
+    this.refs = {  
+      days: document.querySelector('[data-value="days"]'),      
+      hours: document.querySelector('[data-value="hours"]'),  
+      mins: document.querySelector('[data-value="mins"]'),  
+      secs: document.querySelector('[data-value="secs"]'),  
+    }    
   }
   start(){
     const startTime = this.targetDate;
 
-    this.intervalId = setInterval(() => {
+    const intervalId = setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = startTime -currentTime;
+      const deltaTime = startTime - currentTime;
       const time = this.getTimeComponents(deltaTime);
-      updateClockFace(time)
-    },
-      1000)
+      this.updateClockFace(time)
+    })
   }
   pad(value){
   return String(value).padStart(2, '0');
-}
+  }
 
   getTimeComponents(time) {
   /*
@@ -54,21 +52,16 @@ class CountdownTimer{
 
   return {days, hours, mins, secs}
   }
+
+  updateClockFace({days, hours, mins, secs}){
+    this.refs.days.textContent = `${days}`
+    this.refs.hours.textContent = `${hours}`
+    this.refs.mins.textContent = `${mins}`
+    this.refs.secs.textContent = `${secs}`
+  }
 }
 
 const timer = new CountdownTimer({
   selector: '#timer-1',
   targetDate: new Date('Jul 10, 2021'),
-  clockFace: updateClockFace
-
-  // selectorTimer: document.querySelector(this.selector)
 });
-
-function updateClockFace({days, hours, mins, secs}){
-  refs.days.textContent = `${days}`
-  refs.hours.textContent = `${hours}`
-  refs.mins.textContent = `${mins}`
-  refs.secs.textContent = `${secs}`
-}
-
-timer.start()
